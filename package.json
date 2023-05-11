@@ -1,0 +1,29 @@
+{
+  "dependencies": {
+    "delay": "^5.0.0",
+    "delay-for-array": "^1.0.25",
+    "edit-json-file": "^1.7.0",
+    "ipfs-http-client": "^60.0.0",
+    "nft.storage": "^7.0.3",
+    "prompt": "^1.3.0",
+    "rxjs": "^7.8.1",
+    "web3.storage": "^4.5.4"
+  },
+  "name": "nft-metadata-creator",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jefo/nft-metadata-creator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jefo/nft-metadata-creator/issues"
+  },
+  "homepage": "https://github.com/jefo/nft-metadata-creator#readme",
+  "description": ""
+}
