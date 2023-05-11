@@ -48,14 +48,19 @@ async function createMetadata(folder) {
       image: imageUrl
     };
 
-
     files.push(metadata)
 
     console.log(`Generated metadata for ${imageUrl}`);
   }
-  // save metadata to JSON file
-  const metadataJson = JSON.stringify(files, null, 2);
-  fs.writeFileSync('metadata.json', metadataJson);
+  files.forEach((f, i) => {
+    // save metadata to JSON file
+    const metadataJson = JSON.stringify(f, null, 2);
+    const fpath = `./metadata/${i}`;
+    if (!fs.existsSync(fpath)) {
+      fs.mkdirSync(fpath);
+    }
+    fs.writeFileSync(`${fpath}/metadata.json`, metadataJson);
+  });
 }
 
 createMetadata(rootFolder); // start creating metadata at root folder
