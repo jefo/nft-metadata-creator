@@ -36,10 +36,13 @@ async function createMetadata(folder) {
     }
 
     const gatewayUrl = 'https://ipfs.io';
+    // TODO: set link to IPFS instead of gateway
+    // https://docs.ton.org/develop/dapps/tutorials/collection-minting#upload-metadata
 
     let imageUrl = await getFileUrlFromIpfsGateway(link.hash, gatewayUrl);
 
     const metadata = {
+      idx,
       name: `The Diamond Ducks ${idx.toString().padStart(5, '0')}`,
       description: `Introducing the Diamond Duck - a rare gem and a symbol of adventure and fortune. This plucky bird braved the treacherous diamond diggings to uncover a glittering treasure trove. With its gleaming feathers and fearless spirit, the Diamond Duck is a beacon of hope for crypto enthusiasts seeking their own path to riches. Let this NFT be your guide on your journey to success in the unpredictable world of crypto. Get it now and soar with the Diamond Duck to weather any storm!`,
       // description: `Quack, quack! Get ready to join a group of adventurous ducks on a thrilling journey through the diamond diggins. These plucky explorers are on a quest for fortune, digging deep into the earth to uncover the glittering gems that lie hidden beneath the surface.
@@ -47,19 +50,21 @@ async function createMetadata(folder) {
       //   So come along for the ride and see what treasures await in the diamond diggins. With a little luck and a lot of determination, you could be the next diamond digger to strike it rich!`,
       image: imageUrl
     };
-
-    files.push(metadata)
-
+    files.push(metadata);
     console.log(`Generated metadata for ${imageUrl}`);
   }
   files.forEach((f, i) => {
     // save metadata to JSON file
-    const metadataJson = JSON.stringify(f, null, 2);
-    const fpath = `./metadata/${i}`;
+    const fpath = `./m`;
     if (!fs.existsSync(fpath)) {
       fs.mkdirSync(fpath);
     }
-    fs.writeFileSync(`${fpath}/metadata.json`, metadataJson);
+    const metadata = {
+      name: f.name,
+      description: f.description,
+      image: f.image,
+    };
+    fs.writeFileSync(`${fpath}/${f.idx}.json`, JSON.stringify(metadata, null, 2));
   });
 }
 
