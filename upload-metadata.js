@@ -28,7 +28,7 @@ async function uploadMetadata(folder) {
 
   await uploadFiles(folder);
   const cid = await web3storage.put(data);
-  const link = `https://dweb.link/ipfs/${cid}`;
+  const link = `https://ipfs.io/ipfs/${cid}`;
   console.log(`Uploaded metadata to ${link}`);
   
   for (const file in links) {
