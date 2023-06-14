@@ -3,6 +3,8 @@
     "delay": "^5.0.0",
     "delay-for-array": "^1.0.25",
     "edit-json-file": "^1.7.0",
+    "ipfs-core": "^0.18.1",
+    "ipfs-fetch": "^0.2.1",
     "ipfs-http-client": "^60.0.0",
     "nft.storage": "^7.0.3",
     "prompt": "^1.3.0",

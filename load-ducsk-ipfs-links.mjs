@@ -1,6 +1,10 @@
-import fs from 'fs';
+// import fs from 'fs';
 import { create } from 'ipfs-http-client';
-import delayarr from 'delay-for-array';
+// import makeIpfsFetch from 'ipfs-fetch';
+// import delayarr from 'delay-for-array';
+// import { async } from 'rxjs';
+// import { log } from 'console';
+
 
 async function getLinksFromHash(hash) {
   const url = 'https://dweb.link/api/v0';
@@ -13,7 +17,7 @@ async function getLinksFromHash(hash) {
     }
   }
   catch (e) {
-    // console.error(e);
+    console.error(e.response);
   }
   finally {
     return links;
@@ -22,7 +26,7 @@ async function getLinksFromHash(hash) {
   return links;
 }
 
-const ducksDir = 'bafybeifrh6vqhcm3qbdqm45uwpnutcced7iozi2b2trv3rcsn3wbnfk5ky'; 
+const ducksDir = 'bafybeifdasqfzqlyeugqp76pg3clggbrrn5f4oaseervqjjpmxcwc3cnby';
 // const hash = 'bafybeigvu4ju5agjqiouuaiaf4pr56eduhwi2md4rg62bsdc26t4dgooqi/34';
 async function run(hash) {
   const links = await getLinksFromHash(hash);

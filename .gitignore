@@ -43,6 +43,7 @@ node_modules/
 jspm_packages/
 NFT/
 NFT2/
+NFT_test/
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
