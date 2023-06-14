@@ -16,24 +16,15 @@ async function createMetadata(folder) {
   if (!fs.existsSync(metadataDir)) {
     fs.mkdirSync(metadataDir);
   }
-
-  const imgLinksJson = fs.readFileSync('./links.json', { encoding: 'utf8', flag: 'r' });
+  const imgLinksJson = fs.readFileSync('./data/ducks/images/bafybeifdasqfzqlyeugqp76pg3clggbrrn5f4oaseervqjjpmxcwc3cnby.json', { encoding: 'utf8', flag: 'r' });
   const images = JSON.parse(imgLinksJson);
-  const links = images.map(i => ({ name: i.name, hash: i.cid['/'] }));
-  let idx = 0;
-
+  const links = images.map(i => ({ idx: parseInt(i.name, 10), name: i.name, hash: i.cid['/'] }));
+  links.sort((a, b) => a.idx - b.idx);
   for (const link of links) {
-    idx++;
-    // const imageFileName = path.basename(link.name);
-    // const metadataFileName = path.join(metadataDir, `${imageFileName}.json`);
-
     async function getFileUrlFromIpfsGateway(hash, gatewayUrl) {
-      // const ipfs = create({ url: gatewayUrl });
-      // const file = await ipfs.get(hash);
       const fileUrl = gatewayUrl + '/ipfs/' + hash;
       return fileUrl;
     }
-
     const gatewayUrl = 'https://ipfs.io';
     // TODO: set link to IPFS instead of gateway
     // https://docs.ton.org/develop/dapps/tutorials/collection-minting#upload-metadata
@@ -41,8 +32,8 @@ async function createMetadata(folder) {
     let imageUrl = await getFileUrlFromIpfsGateway(link.hash, gatewayUrl);
 
     const metadata = {
-      idx,
-      name: `The Diamond Duck ${idx.toString().padStart(5, '0')}`,
+      idx: link.idx,
+      name: `The Diamond Duck ${link.idx.toString().padStart(4, '0')}`,
       description: `Discover unique eggs that hold hidden GEM💎\nLimited to a series of 1000 NFTs, this NFT grants guarantees you a unique opportunity to receive our token through an exclusive airdrop.`,
       image: imageUrl
     };
@@ -51,7 +42,7 @@ async function createMetadata(folder) {
   }
   files.forEach((f, i) => {
     // save metadata to JSON file
-    const fpath = `./metadata`;
+    const fpath = `./data/ducks/metadata`;
     if (!fs.existsSync(fpath)) {
       fs.mkdirSync(fpath);
     }

@@ -1,9 +1,7 @@
-// import fs from 'fs';
+import fs from 'fs';
 import { create } from 'ipfs-http-client';
-// import makeIpfsFetch from 'ipfs-fetch';
-// import delayarr from 'delay-for-array';
-// import { async } from 'rxjs';
-// import { log } from 'console';
+import delayarr from 'delay-for-array';
+import path from 'path';
 
 
 async function getLinksFromHash(hash) {
@@ -28,7 +26,7 @@ async function getLinksFromHash(hash) {
 
 const ducksDir = 'bafybeifdasqfzqlyeugqp76pg3clggbrrn5f4oaseervqjjpmxcwc3cnby';
 // const hash = 'bafybeigvu4ju5agjqiouuaiaf4pr56eduhwi2md4rg62bsdc26t4dgooqi/34';
-async function run(hash) {
+async function run(hash, subdir) {
   const links = await getLinksFromHash(hash);
   const fileLinks = [];
 
@@ -45,11 +43,13 @@ async function run(hash) {
   }, () => {
     console.log(hash, fileLinks.length);
     const linksJson = JSON.stringify(fileLinks, null, 2);
-    fs.writeFileSync(`${hash}.json`, linksJson);
+    const savePath = path.join('./data', subdir, `${hash}.json`);
+    console.log('savedTo', savePath);
+    fs.writeFileSync(savePath, linksJson);
   });
 }
 
 (async () => {
-  run(ducksDir);
+  run(ducksDir, 'images');
 })();
 
