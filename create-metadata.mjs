@@ -35,14 +35,15 @@ async function createMetadata(folder) {
       idx: link.idx,
       name: `The Diamond Duck ${link.idx.toString().padStart(4, '0')}`,
       description: `Discover unique eggs that hold hidden GEM💎\nLimited to a series of 1000 NFTs, this NFT grants guarantees you a unique opportunity to receive our token through an exclusive airdrop.`,
-      image: imageUrl
+      // image: imageUrl
+      image: 'https://ipfs.io/ipfs/bafybeidk2hekrw3whjwdboytdf6grpnfvg3bo4yq4exdz77b362aa4tldy',
     };
     files.push(metadata);
     console.log(`Generated metadata for ${imageUrl}`);
   }
   files.forEach((f, i) => {
     // save metadata to JSON file
-    const fpath = `./data/ducks/metadata`;
+    const fpath = `./data/eggs/metadata`;
     if (!fs.existsSync(fpath)) {
       fs.mkdirSync(fpath);
     }

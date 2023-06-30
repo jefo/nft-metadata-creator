@@ -22,10 +22,10 @@ async function getLinksFromHash(hash) {
   return links;
 }
 
-const eggsDir = 'bafybeibkhuancwvnattd4tuws2ahs2a5vayu2mvihdoejtzp4f63ylxl2y'; 
-const ducksDir = 'bafybeidlqe7zn6yevcid2oun6m7xorrwzbrbiwlrd7oun243hl5kuwzylq';
+const eggsDir = 'bafybeiajoukagmuqxzv4frqwxbo6ojclz6tmeztbkdk4stxb6djtxnabm4';
+const ducksDir = 'bafybeihqmd6abyu5jcdyjtlftfgsitvt7qiycexblifwzbnuqjhnhyg5q4';
 // const hash = 'bafybeigvu4ju5agjqiouuaiaf4pr56eduhwi2md4rg62bsdc26t4dgooqi/34';
-async function run(hash) {
+async function run(hash, subdir) {
   const links = await getLinksFromHash(hash);
   const fileLinks = [];
 
@@ -36,16 +36,23 @@ async function run(hash) {
     if (item.type === 'dir') {
       const links = await getLinksFromHash(hash);
       fileLinks.push(...links);
+    } else {
+      fileLinks.push({
+        idx: parseInt(item.name, 10),
+        cid: JSON.parse(JSON.stringify(item)).cid['/'] // o_O ??? xDDDD
+      });
     }
   }, () => {
     console.log(hash, fileLinks.length);
-    const linksJson = JSON.stringify(fileLinks, null, 2);
-    fs.writeFileSync(`${hash}.json`, linksJson);
+    fileLinks.sort((a, b) => a.idx - b.idx);
+    console.log(fileLinks);
+    const linksJson = JSON.stringify(fileLinks.map(f => f.cid), null, 2);
+    fs.writeFileSync(`./data/${subdir}/metadata/${hash}.json`, linksJson);
   });
 }
 
 (async () => {
-  run(eggsDir);
-  run(ducksDir);
+  run(eggsDir, 'eggs');
+  run(ducksDir, 'ducks');
 })();
 
