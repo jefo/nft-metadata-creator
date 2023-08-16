@@ -16,7 +16,6 @@ function findMissingNumbers(sequence) {
 }
 
 
-
 async function validateLinks(hash) {
     const str = fs.readFileSync(`./${hash}.json`, { encoding: 'utf-8' });
     const data = JSON.parse(str);
