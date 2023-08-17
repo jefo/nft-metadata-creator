@@ -16,11 +16,19 @@ async function uploadMetadata(folder) {
   console.log(`Uploaded metadata to ${link}`);
 
   const links = await getLinksFromHash(cid);
+  let items = links.map(l => ({
+    idx: parseInt(l.name, 10),
+    cid: JSON.parse(JSON.stringify(l)).cid['/'] // o_O ??? xDDDD
+  }));
+  items.sort((a, b) => a.idx - b.idx);
+  items = items.map(i => i.cid);
 
   fs.writeFileSync(path.join(folder, 'ipfs.json'), JSON.stringify(links, null, 2));
+  fs.writeFileSync(path.join(folder, 'items.json'), JSON.stringify(items, null, 2));
   return link;
 }
 
 (async () => {
-  await uploadMetadata('./data/eggs/metadata');
+  await uploadMetadata('./data/ducks/metadata');
+  // await uploadMetadata('./data/eggs/metadata');
 })();

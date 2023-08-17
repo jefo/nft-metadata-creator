@@ -21,7 +21,7 @@ function renameFiles(folder) {
       }
       const newName = `${count}${ext}`; // generate new name
       const newFilePath = path.join('NFT2', newName);
-      fs.renameSync(filePath, newFilePath); // rename file
+      fs.renameSync(filePath, newFileimages linksPath); // rename file
       // fs.copyFileSync(path.join(__dirname, newFilePath), path.join(__dirname, 'NFT2'));
       count++; // increment count
       res.push(count);
