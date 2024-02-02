@@ -1,7 +1,18 @@
-import {create} from "ipfs-http-client";
+// import IPFS from 'ipfs';
 import fs from 'fs';
+import { File } from '@web-std/file';
 import path from 'path';
-import {Web3Storage} from "web3.storage";
+import { create } from 'kubo-rpc-client'
+
+const client = create();
+
+export async function lsIpfsDir(cid) {
+    for await (const file of client.ls(cid)) {
+        console.log(file)
+    }   
+
+    return [];
+}
 
 export function assignPricesToNFTs(pricesHashTable) {
     const assignedNFTs = [];
@@ -14,29 +25,32 @@ export function assignPricesToNFTs(pricesHashTable) {
     return assignedNFTs;
 }
 
-export async function getLinksFromHash(hash) {
-    const url = 'https://dweb.link/api/v0';
-    const ipfs = create({url});
-    const links = [];
-    try {
-        const t = await ipfs.ls(hash);
-        for await (const link of t) {
-            links.push(link);
-        }
-    } catch (e) {
-        // console.error(e);
-    }
-    return links;
-}
+// export async function getLinksFromHash(hash) {
+//     const ipfs = await IPFS.create();
+//     const links = [];
+//     try {
+//         const t = ipfs.ls(hash);
+//         for await (const link of t) {
+//             links.push(link);
+//         }
+//     } catch (e) {
+//         console.log('error');
+//         console.error(e);
+//     }
+//     return links;
+// }
+
+
 
 const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDgwREY0MEE3NkNDMkUyRmE1MWZhODQyN2RlYWEyODMwZDA5MTlhNUUiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODM2OTAyMzQzNDEsIm5hbWUiOiJkaWFtb25kcyJ9.EsXYNG73a5xZM1H-wwtKCft7SOBcBTp96Ji17xQouH8'; // API key for nft.storage
 
-export async function getFilesByCId(cid) {
-    const client = new Web3Storage({token: apiKey});
-    const res = await client.get(cid); // Promise<Web3Response | null>
-    const files = await res.files(); // Promise<Web3File[]>
-    return files;
-}
+export async function getFilesListFromIPFS(cid) {
+    const ipfs = await IPFS.create({  });
+    const fetch = await makeIpfsFetch({ipfs});
+    const response = await fetch(`ipfs://${cid}/`, {headers: {Accept: 'application/json'}})
+    const data = await response.json();
+    return data;
+  }
 
 export async function readDirectory(directoryPath) {
     const directoryFiles = [];
@@ -61,6 +75,22 @@ export async function readDirectory(directoryPath) {
     await readFilesRecursively(directoryPath);
 
     return directoryFiles;
+}
+
+export function readFilesInDirectory(directoryPath) {
+    try {
+        const fileNames = fs.readdirSync(directoryPath);
+        const filesArray = fileNames.map(fileName => {
+          const filePath = path.join(directoryPath, fileName);
+          const fileData = fs.readFileSync(filePath);
+            return new File([fileData], fileName, { type: 'application/octet-stream' });
+        });
+    
+        return filesArray;
+      } catch (error) {
+        console.error('Ошибка при чтении файлов:', error.message);
+        return [];
+      }
 }
 
 export function getPartMetadata(links) {

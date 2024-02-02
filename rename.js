@@ -1,7 +1,7 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
-const rootFolder = './NFT'; // root folder containing all subfolders with images
+const rootFolder = './data/NFT'; // root folder containing all subfolders with images
 
 let count = 1; // starting count
 
@@ -20,8 +20,8 @@ function renameFiles(folder) {
         continue;
       }
       const newName = `${count}${ext}`; // generate new name
-      const newFilePath = path.join('NFT2', newName);
-      fs.renameSync(filePath, newFileimages linksPath); // rename file
+      const newFilePath = path.join('data/upload', newName);
+      fs.renameSync(filePath, newFilePath); // rename file
       // fs.copyFileSync(path.join(__dirname, newFilePath), path.join(__dirname, 'NFT2'));
       count++; // increment count
       res.push(count);
