@@ -1,6 +1,6 @@
 import {describe, it} from 'node:test';
 import * as assert from "assert";
-import {assignPricesToNFTs} from '../utils.mjs';
+import {assignPricesToNFTs} from '../utils/utils.mjs';
 
 describe('assignPricesToNFTs', () => {
     it('should correctly find NFT price by index', () => {

@@ -1,14 +1,15 @@
 import client from "../nft-storage.mjs";
-import { lsIpfsDir, writeJsonContent } from "../utils.mjs";
+import { lsIpfsDir, readFilesInDirectory } from "./utils.mjs";
 import retry from 'async-retry';
+import _ from 'lodash';
 
-export async function putFolder(files) {
+export async function storeDir(files) {
     const cid = await client.storeDirectory(files);
     const links = await lsIpfsDir(cid);
     return links;
 }
 
-async function uploadDir(dir) {
+export async function uploadDir(dir) {
     const files = readFilesInDirectory(dir);
 
     // Splitting files into 10 groups
@@ -22,7 +23,7 @@ async function uploadDir(dir) {
         // Making 5 attempts to upload each group of files
         try {
             await retry(async () => {
-                const links = putFolder(filesGroup);
+                const links = await storeDir(filesGroup);
                 // Adding successful upload to array
                 successfulUploads.push(...links);
             }, {
