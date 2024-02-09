@@ -1,17 +1,19 @@
-// import IPFS from 'ipfs';
+import {create} from 'ipfs';
 import fs from 'fs';
 import { File } from '@web-std/file';
 import path from 'path';
-import { create } from 'kubo-rpc-client'
+import { create as createKubo } from 'kubo-rpc-client';
+import makeIpfsFetch from 'js-ipfs-fetch';
+import retry from 'async-retry';
 
-const client = create();
+const client = createKubo();
 
 export async function lsIpfsDir(cid) {
+    const files = [];
     for await (const file of client.ls(cid)) {
-        console.log(file)
-    }   
-
-    return [];
+        files.push(file);
+    }
+    return files;
 }
 
 export function assignPricesToNFTs(pricesHashTable) {
@@ -45,12 +47,13 @@ export function assignPricesToNFTs(pricesHashTable) {
 const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDgwREY0MEE3NkNDMkUyRmE1MWZhODQyN2RlYWEyODMwZDA5MTlhNUUiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODM2OTAyMzQzNDEsIm5hbWUiOiJkaWFtb25kcyJ9.EsXYNG73a5xZM1H-wwtKCft7SOBcBTp96Ji17xQouH8'; // API key for nft.storage
 
 export async function getFilesListFromIPFS(cid) {
-    const ipfs = await IPFS.create({  });
-    const fetch = await makeIpfsFetch({ipfs});
+    const ipfs = await create();
+    const fetch = makeIpfsFetch({ipfs});
     const response = await fetch(`ipfs://${cid}/`, {headers: {Accept: 'application/json'}})
     const data = await response.json();
+
     return data;
-  }
+}
 
 export async function readDirectory(directoryPath) {
     const directoryFiles = [];
