@@ -19,10 +19,9 @@ async function createMetadata(dir) {
     }
     partMetadata.forEach(m => {
         const metadata = {
-            // idx: m.idx,
             name: `The Diamond Duck ${m.idx.toString().padStart(4, '0')}`,
-            description: `This NFT, limited to a series of 1000, offers a unique opportunity to receive our token through an exclusive AirDrop.`,
-            image: `https://ipfs.io/ipfs/${m.cid}`,
+            description: `This NFT, limited to a series of 1000, offers a unique opportunity to receive our exclusive AirDrop.`,
+            image: `https://ipfs.thediamondswap.com/ipfs/${m.cid}`,
             attributes: [
                 {trait_type: 'value', value: priceByIndex[m.idx - 1]},
             ]

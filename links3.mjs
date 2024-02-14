@@ -10,8 +10,6 @@ function run(dir) {
 
         // Преобразуем JSON строку в объект
         const ipfsArray = JSON.parse(data);
-
-
         // Извлечение значений CID в новый массив
         const cidArray = ipfsArray.map(item => item.cid['/']);
         console.log(cidArray);

@@ -3,7 +3,6 @@ import { create } from 'ipfs-http-client';
 import delayarr from 'delay-for-array';
 import path from 'path';
 
-
 async function getLinksFromHash(hash) {
   const url = 'https://dweb.link/api/v0';
   const ipfs = create({ url });

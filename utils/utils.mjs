@@ -4,7 +4,6 @@ import { File } from '@web-std/file';
 import path from 'path';
 import { create as createKubo } from 'kubo-rpc-client';
 import makeIpfsFetch from 'js-ipfs-fetch';
-import retry from 'async-retry';
 
 const client = createKubo();
 
@@ -15,7 +14,6 @@ export async function lsIpfsDir(cid) {
     }
     return files;
 }
-
 export function assignPricesToNFTs(pricesHashTable) {
     const assignedNFTs = [];
     for (const price in pricesHashTable) {
@@ -53,31 +51,6 @@ export async function getFilesListFromIPFS(cid) {
     const data = await response.json();
 
     return data;
-}
-
-export async function readDirectory(directoryPath) {
-    const directoryFiles = [];
-
-    async function readFilesRecursively(dir) {
-        const files = fs.readdirSync(dir);
-
-        for (const file of files) {
-            const filePath = path.join(dir, file);
-            const fileStat = fs.statSync(filePath);
-
-            if (fileStat.isDirectory()) {
-                await readFilesRecursively(filePath);
-            } else if (fileStat.isFile()) {
-                const relativePath = path.relative(directoryPath, filePath);
-                const stream = fs.createReadStream(filePath); // Создание потока чтения файла
-                directoryFiles.push({name: file, stream: () => stream});
-            }
-        }
-    }
-
-    await readFilesRecursively(directoryPath);
-
-    return directoryFiles;
 }
 
 export function readFilesInDirectory(directoryPath) {
@@ -120,3 +93,32 @@ export const readIpfsJson = async (filePath) => {
 export function writeJsonContent(dir, fileName, content) {
     fs.writeFileSync(path.join(dir, `${fileName}.json`), JSON.stringify(content, null, 2));
 }
+
+export async function getCarFileCids() {
+    return [
+        'bafybeigdvbhwv4tsrewwrm7jg2tuveyfde6q4jyjn23pilraqd4vfdmgku',
+        'bafybeide3naak76yindvscfeuaqdz6jdta7jnxeo4uebt6j5fzqt7i2owm',
+        'bafybeido6td2e2mz5nxajisizueytqhrqfc7kmuomkvsqu7kq3hxkpn2me',
+        'bafybeicmp4c5suzhgud5yy5v3qillfpa3syxjfv3lthg53zsjt6m3637jq',
+        'bafybeigg6cnry5sz5rk7taeqvug4tn75r3bs7qszpbkeahlcuwvmfcik2u',
+        'bafybeidrd4lt4pojzannrc5qc7gletdj7gb5aw25pncbtpfitg4o6gjbsu',
+        'bafybeia3rjpor7ixzfjg3reo635y5e6r4iu6qvnqtcetmdvhdn2pnnvuge',
+        'bafybeiboschyw4bjuj47olbxxla657f4uas72uxfbbvsffe5vckwtwuopq',
+        'bafybeidfvpopu3fygw2moyvyza5nwmjkiwizktfkosvxxu4ju33f4dso3m',
+        'bafybeibipdpqckjzv6zmgxvs6ucflopzd7tfoobzqhqzf4zjtkugt5adfa'
+    ]
+}
+
+export async function flatLinks(rootCids, outDir) {
+    const allCids = [];
+    for (let file of rootCids) {
+        const cids = await lsIpfsDir(file);
+        allCids.push(...cids);
+        console.log('cid', file)
+    }
+    writeJsonContent(outDir, 'items', allCids);
+    const items = await readJsonContent(`${outDir}/items.json`);
+    const cidArray = items.map(item => item.cid['/']);
+    writeJsonContent(outDir, 'cids', cidArray);
+}
+
